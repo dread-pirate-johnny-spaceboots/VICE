@@ -51,6 +51,7 @@
 #include "diskconstants.h"
 #include "diskimage.h"
 #include "drive-check.h"
+#include "drive-status.h"
 #include "drive.h"
 #include "drivecpu.h"
 #include "drivecpu65c02.h"
@@ -537,6 +538,7 @@ void drive_disable(diskunit_context_t *drv)
     /* This must come first, because this might be called before the true
        drive initialization.  */
     drv->enable = 0;
+    drive_status_reset_unit(drv->mynumber);
 
     DBG(("drive_disable unit: %u", 8 + drv->mynumber));
     resources_get_int_sprintf("Drive%uTrueEmulation", &drive_true_emulation, 8 + drv->mynumber);
@@ -744,6 +746,7 @@ void drive_move_head(int step, drive_t *drive)
     drive_gcr_data_writeback(drive);
     drive_sound_head(drive->current_half_track, step, drive->diskunit->mynumber);
     drive_set_half_track(drive->current_half_track + step, drive->side, drive);
+    drive_status_set_step_event(drive->diskunit->mynumber);
 }
 
 void drive_gcr_data_writeback(drive_t *drive)
@@ -1081,6 +1084,8 @@ void drive_setup_context(void)
         diskunit_context[unr] = lib_calloc(1, sizeof(diskunit_context_t));
         drive_setup_context_for_unit(diskunit_context[unr], unr);
     }
+
+    drive_status_init();
 }
 
 int drive_has_buttons(unsigned int dnr)

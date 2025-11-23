@@ -37,6 +37,8 @@ libdrive_a_SOURCES = \
 	drive-resources.h \
 	drive-snapshot.c \
 	drive-snapshot.h \
+	drive-status.c \
+	drive-status.h \
 	drive-sound.c \
 	drive-sound.h \
 	drive-writeprotect.c \

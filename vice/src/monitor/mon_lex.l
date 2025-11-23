@@ -179,6 +179,7 @@ HDIGIT  [0-9a-f]
         delete_label|dl { BEGIN(INITIAL);       return CMD_DEL_LABEL; }
         device|dev      { BEGIN(INITIAL);       return CMD_DEVICE; }
         detach          { BEGIN(INITIAL);       return CMD_DETACH; }
+        drivestatus     { BEGIN(INITIAL);       return CMD_DRIVESTATUS; }
         disable|dis     { BEGIN(INITIAL);       return CMD_CHECKPT_OFF; }
         dump            { BEGIN(FNAME);         return CMD_DUMP; }
         enable|en       { BEGIN(INITIAL);       return CMD_CHECKPT_ON; }

@@ -35,6 +35,7 @@
 #include "fdd.h"
 #include "diskconstants.h"
 #include "diskimage.h"
+#include "drive-status.h"
 #include "drive.h"
 #include "snapshot.h"
 
@@ -689,9 +690,13 @@ void fdd_flush(fd_drive_t *drv)
 
 void fdd_seek_pulse(fd_drive_t *drv, int dir)
 {
+    int old_half_track;
+
     if (!drv) {
         return;
     }
+
+    old_half_track = drv->drive ? drv->drive->current_half_track : 0;
 
     if (drv->motor) {
         drv->track += dir ? 1 : -1;
@@ -724,6 +729,10 @@ void fdd_seek_pulse(fd_drive_t *drv, int dir)
             }
         }
     }
+
+    if (drv->drive && drv->drive->current_half_track != old_half_track) {
+        drive_status_set_step_event(drv->drive->diskunit->mynumber);
+    }
 }
 
 void fdd_select_head(fd_drive_t *drv, int head)
@@ -740,6 +749,9 @@ void fdd_set_motor(fd_drive_t *drv, int motor)
         return;
     }
     drv->motor = motor & 1;
+    if (drv->drive && drv->drive->diskunit) {
+        drive_status_set_motor(drv->drive->diskunit->mynumber, drv->motor);
+    }
 }
 
 void fdd_set_rate(fd_drive_t *drv, int rate)

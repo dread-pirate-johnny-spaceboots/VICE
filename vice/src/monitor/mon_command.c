@@ -732,6 +732,15 @@ static const mon_cmds_t mon_cmd_array[] = {
       NO_FILENAME_ARG
     },
 
+    { "drivestatus", "",
+      "[<drive>]",
+      "Report current drive state as space-separated integers:"
+      " <drive> <motor_on> <led_on> <track> <rw_mode> <step_event>."
+      " Without an argument, prints all active IEC drives and clears the"
+      " one-shot step_event flags as the data is read.",
+      NO_FILENAME_ARG
+    },
+
     { "load", "l",
       "\"<filename>\" <device> [<address>]",
       "Load the specified file into memory at the specified address."

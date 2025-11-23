@@ -152,7 +152,7 @@ void set_yydebug(int val);
 %token CMD_RESOURCE_GET CMD_RESOURCE_SET CMD_LOAD_RESOURCES CMD_SAVE_RESOURCES
 %token CMD_ATTACH CMD_DETACH CMD_MON_RESET CMD_TAPECTRL CMD_TAPEOFFS CMD_CARTFREEZE CMD_UPDB CMD_JPDB
 %token CMD_CPUHISTORY CMD_MEMMAPZAP CMD_MEMMAPSHOW CMD_MEMMAPSAVE
-%token CMD_COMMENT CMD_LIST CMD_STOPWATCH RESET
+%token CMD_COMMENT CMD_LIST CMD_STOPWATCH RESET CMD_DRIVESTATUS
 %token CMD_EXPORT CMD_AUTOSTART CMD_AUTOLOAD CMD_MAINCPU_TRACE
 %token CMD_WARP
 %token CMD_PROFILE FLAT GRAPH FUNC DEPTH DISASS PROFILE_CONTEXT CLEAR
@@ -603,6 +603,10 @@ monitor_misc_rules: CMD_DISK rest_of_line end_cmd
                      { mon_stopwatch_reset(); }
                   | CMD_STOPWATCH end_cmd
                      { mon_stopwatch_show("Stopwatch: ", "\n"); }
+                  | CMD_DRIVESTATUS end_cmd
+                     { mon_drive_status(-1); }
+                  | CMD_DRIVESTATUS expression end_cmd
+                     { mon_drive_status($2); }
                   | CMD_PROFILE TOGGLE end_cmd
                      { mon_profile_action($2); }
                   | CMD_PROFILE end_cmd

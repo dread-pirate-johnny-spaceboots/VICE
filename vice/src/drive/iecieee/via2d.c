@@ -53,6 +53,7 @@
 
 #include "drive-writeprotect.h"
 #include "drive.h"
+#include "drive-status.h"
 #include "drivetypes.h"
 #include "interrupt.h"
 #include "lib.h"
@@ -326,6 +327,7 @@ static void store_prb(via_context_t *via_context, uint8_t byte, uint8_t poldpb,
         drive_sound_update((byte & 4) ? DRIVE_SOUND_MOTOR_ON : DRIVE_SOUND_MOTOR_OFF, via2p->number);
         bra = drv->byte_ready_active;
         drv->byte_ready_active = (bra & ~BRA_MOTOR_ON) | (byte & BRA_MOTOR_ON);
+        drive_status_set_motor(via2p->number, (byte & BRA_MOTOR_ON) ? 1 : 0);
         if ((byte & BRA_MOTOR_ON) != 0) {
             rotation_begins(drv);
         } else {

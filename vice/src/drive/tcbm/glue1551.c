@@ -28,6 +28,7 @@
 
 #include "alarm.h"
 #include "drive-writeprotect.h"
+#include "drive-status.h"
 #include "drive.h"
 #include "drivetypes.h"
 #include "glue1551.h"
@@ -70,6 +71,7 @@ static void glue_pport_update(diskunit_context_t *drv)
     if ((old_output ^ output) & 0x04) {
         drive_sound_update((output & 0x04) ? DRIVE_SOUND_MOTOR_ON : DRIVE_SOUND_MOTOR_OFF, drv->mynumber);
         drv->drives[0]->byte_ready_active = (output & 0x04) ? BRA_MOTOR_ON|BRA_BYTE_READY : 0;
+        drive_status_set_motor(drv->mynumber, (output & 0x04) ? 1 : 0);
         if (drv->drives[0]->byte_ready_active == (BRA_MOTOR_ON|BRA_BYTE_READY)) {
             rotation_begins(drv->drives[0]);
         }

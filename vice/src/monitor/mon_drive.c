@@ -35,6 +35,7 @@
 #include "charset.h"
 #include "diskcontents-block.h"
 #include "diskimage.h"
+#include "drive-status.h"
 #include "imagecontents.h"
 #include "lib.h"
 #include "machine-bus.h"
@@ -220,6 +221,45 @@ void mon_drive_list(int drive_unit)
             string = lib_msprintf("%d blocks free.\n", listing->blocks_free);
             mon_out("%s", string);
             lib_free(string);
+        }
+    }
+}
+
+static int mon_drive_status_output_unit(unsigned int unit, int clear_step)
+{
+    drive_status_t status;
+
+    if (drive_status_get(unit, &status, clear_step) != 0) {
+        return -1;
+    }
+
+    mon_out("%d %d %d %d %d %d\n",
+            status.drive_num,
+            status.motor_on,
+            status.led_on,
+            status.track,
+            status.rw_mode,
+            status.step_event);
+
+    return 0;
+}
+
+void mon_drive_status(int drive_unit)
+{
+    unsigned int unit;
+
+    if (drive_unit >= 0) {
+        int idx = drive_status_drive_to_unit(drive_unit);
+
+        if (idx < 0 || mon_drive_status_output_unit((unsigned int)idx, 1) != 0) {
+            mon_out("ERROR: INVALID DRIVE\n");
+        }
+        return;
+    }
+
+    for (unit = 0; unit < NUM_DISK_UNITS; unit++) {
+        if (drive_status_unit_active(unit)) {
+            mon_drive_status_output_unit(unit, 1);
         }
     }
 }

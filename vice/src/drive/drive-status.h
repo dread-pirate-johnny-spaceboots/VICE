@@ -1,8 +1,5 @@
 /*
- * mon_drive.h - The VICE built-in monitor drive functions.
- *
- * Written by
- *  Andreas Boose <viceteam@t-online.de>
+ * drive-status.h - Lightweight drive status introspection helpers.
  *
  * This file is part of VICE, the Versatile Commodore Emulator.
  * See README for copyright notice.
@@ -24,20 +21,26 @@
  *
  */
 
-#ifndef VICE_MON_DRIVE_H
-#define VICE_MON_DRIVE_H
+#ifndef VICE_DRIVE_STATUS_H
+#define VICE_DRIVE_STATUS_H
 
-#include "monitor.h"
+#include "drive.h"
 
-void mon_drive_block_cmd(int op, int track, int sector, MON_ADDR addr);
-void mon_drive_execute_disk_cmd(char *cmd);
-void mon_drive_list(int drive_number);
-void mon_drive_status(int drive_unit);
+typedef struct {
+    int drive_num;
+    int motor_on;
+    int led_on;
+    int track;
+    int rw_mode;
+    int step_event;
+} drive_status_t;
 
-/* FIXME: this function should perhaps live elsewhere */
-int mon_drive_is_fsdevice(int drive_unit);
-
-/* FIXME: this function should perhaps live elsewhere */
-const char *mon_drive_get_fsdevice_path(int drive_unit);
+void drive_status_init(void);
+void drive_status_reset_unit(unsigned int unit);
+void drive_status_set_motor(unsigned int unit, int motor_on);
+void drive_status_set_step_event(unsigned int unit);
+int drive_status_get(unsigned int unit, drive_status_t *status, int clear_step);
+int drive_status_unit_active(unsigned int unit);
+int drive_status_drive_to_unit(int drive_num);
 
 #endif
