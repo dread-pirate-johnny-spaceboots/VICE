@@ -67,6 +67,8 @@ libmonitor_a_SOURCES = \
 	mon_register.c \
 	mon_util.c \
 	mon_util.h \
+	monitor_drivestatus_server.c \
+	monitor_drivestatus_server.h \
 	mon_lex.l \
 	monitor.c \
 	monitor_network.c \

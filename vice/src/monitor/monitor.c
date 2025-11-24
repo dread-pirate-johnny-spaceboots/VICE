@@ -73,6 +73,7 @@
 #include "mon_util.h"
 #include "monitor.h"
 #include "monitor_network.h"
+#include "monitor_drivestatus_server.h"
 #include "monitor_binary.h"
 #include "montypes.h"
 
@@ -405,6 +406,7 @@ void monitor_vsync_hook(void)
     /* check if someone wants to connect remotely to the monitor */
     monitor_check_remote();
     monitor_check_binary();
+    monitor_drivestatus_poll();
 #endif
 }
 
